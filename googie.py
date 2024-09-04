@@ -19,7 +19,7 @@ def get_chat_completion(user_prompt, system_role=(
             messages=messages,
             temperature=temperature
         )
-        return response.choices[0].message['content']
+        return response.choices[0].message.content
     except Exception as e:
         st.error(f"An error occurred: {e}")
         return None
