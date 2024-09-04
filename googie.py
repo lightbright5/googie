@@ -1,8 +1,7 @@
 import streamlit as st
 import openai
 
-api_key = st.secrets["api_key"]
-openai.api_key = api_key
+openai.api_key = st.secrets["api_key"]
 
 # Function to get chat completion
 def get_chat_completion(user_prompt, system_role=(
@@ -14,21 +13,26 @@ def get_chat_completion(user_prompt, system_role=(
         {'role': 'user', 'content': user_prompt}
     ]
     
-    response = openai.ChatCompletion.create(
-        model=model,
-        messages=messages,
-        temperature=temperature
-    )
-    return response.choices[0].message['content']
+    try:
+        response = openai.ChatCompletion.create(
+            model=model,
+            messages=messages,
+            temperature=temperature
+        )
+        return response.choices[0].message['content']
+    except openai.OpenAIError as e:
+        st.error(f"An error occurred: {e}")
+        return None
 
+# Streamlit App
 st.title('Welcome to Googie!!!')
 
 my_select_box = st.sidebar.selectbox('Select Output Tone:', ['Funny', 'Serious'])
 
-user_input = st.text_input("Enter some text:")
+user_input = st.text_input("Ask Me A Question:")
 
 if st.button('Submit'):
     response = get_chat_completion(user_prompt=user_input)
-    st.write(f'GPT Response: {response}')
-
-
+    
+    if response:
+        st.write(f'GPT Response: {response}')
