@@ -36,4 +36,3 @@ if st.button('Submit'):
     
     if response:
         st.write(f'GPT Response: {response}')
-
